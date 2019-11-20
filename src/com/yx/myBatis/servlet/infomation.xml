@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test">
+    <select id="findInfoById" parameterType="int" resultType="com.yx.myBatis.bean.Infomation">
+        select * from infomation where id=#{id}
+    </select>
+    
+    <select id="findInfoByName" parameterType="java.lang.String" resultType="com.yx.myBatis.bean.Infomation">
+        select * from infomation where name like '%${id}%'
+    </select>
+    
+    <insert id="insertInfo" parameterType="com.yx.myBatis.bean.Infomation">
+        <!-- 自增主键的ID返回
+        last_insert_id仅仅使用于自增主键
+        keyProperty将返回的主键设置到parameterType的对应字段中
+        返回int类型也可以
+        
+        uuid()可以获取非自增主键的返回，但是执行的顺序是order为before，sql语句中必须要有ID
+         -->
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            select last_insert_id()
+        </selectKey>
+        insert into infomation(name,password) value (#{name},#{password})
+    </insert>
+    
+    <delete id="deleteInfoById" parameterType="java.lang.Integer">
+        delete from infomation where id = #{id}
+    </delete>
+    
+    <update id="updateInfoById" parameterType="com.yx.myBatis.bean.Infomation" >
+        update infomation set name = #{name}, password = #{password} where id = #{id}
+    </update>
+</mapper>
